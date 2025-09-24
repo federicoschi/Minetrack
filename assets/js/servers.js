@@ -247,6 +247,26 @@ export class ServerRegistration {
       this.lastPeakData = ping.graphPeakData
     }
 
+    if (ping.historicalData) {
+      if (typeof ping.historicalData.oneDayAgo === 'number') {
+        this._renderValue('1day', formatNumber(ping.historicalData.oneDayAgo))
+      } else {
+        this._renderValue('1day', '-')
+      }
+
+      if (typeof ping.historicalData.twoDaysAgo === 'number') {
+        this._renderValue('2day', formatNumber(ping.historicalData.twoDaysAgo))
+      } else {
+        this._renderValue('2day', '-')
+      }
+
+      if (typeof ping.historicalData.threeDaysAgo === 'number') {
+        this._renderValue('3day', formatNumber(ping.historicalData.threeDaysAgo))
+      } else {
+        this._renderValue('3day', '-')
+      }
+    }
+
     if (ping.error) {
       this._hideValue('player-count')
       this._renderValue('error', ping.error.message)
@@ -287,6 +307,9 @@ export class ServerRegistration {
         <span class="server-label" id="player-count_${this.serverId}">Players: <span class="server-value" id="player-count-value_${this.serverId}"></span></span>
         <span class="server-label" id="peak_${this.serverId}">${this._app.publicConfig.graphDurationLabel} Peak: <span class="server-value" id="peak-value_${this.serverId}">-</span></span>
         <span class="server-label" id="record_${this.serverId}">Record: <span class="server-value" id="record-value_${this.serverId}">-</span></span>
+        <span class="server-label" id="1day_${this.serverId}">1 Day Ago: <span class="server-value" id="1day-value_${this.serverId}">-</span></span>
+        <span class="server-label" id="2day_${this.serverId}">2 Days Ago: <span class="server-value" id="2day-value_${this.serverId}">-</span></span>
+        <span class="server-label" id="3day_${this.serverId}">3 Days Ago: <span class="server-value" id="3day-value_${this.serverId}">-</span></span>
         <span class="server-label" id="version_${this.serverId}"></span>
       </div>
       <div class="column column-graph" id="chart_${this.serverId}"></div>`
@@ -297,7 +320,7 @@ export class ServerRegistration {
   }
 
   updateHighlightedValue (selectedCategory) {
-    ['player-count', 'peak', 'record'].forEach((category) => {
+    ['player-count', 'peak', 'record', '1day', '2day', '3day'].forEach((category) => {
       const labelElement = document.getElementById(`${category}_${this.serverId}`)
       const valueElement = document.getElementById(`${category}-value_${this.serverId}`)
 
